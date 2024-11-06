@@ -1,4 +1,3 @@
-import WordSearch from '@/components/play/WordSearch';
 import { Button } from '@/components/ui/button';
 import {
     Drawer,
@@ -11,7 +10,8 @@ import {
 import { GameContext } from '@/context/GameProvider';
 import React, { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import { ArrowRightCircle } from 'react-native-feather';
+import { ArrowDownCircle, ArrowUpCircle } from 'react-native-feather';
+import WordSearch from './WordSearch';
 import { wordSearchGame } from './wordSearchData';
 
 const words = wordSearchGame.words;
@@ -42,12 +42,14 @@ const WordSearchScreen: React.FC = () => {
 
     return (
         <>
-            <View className='flex-1 justify-center items-center'>
-                <Text style={{ fontSize: 24, marginBottom: 20 }}>
+            <View className='flex-1 items-center '>
+                <Text style={{ fontSize: 24, marginTop: 20 }}>
                     Word Search Game
                 </Text>
-                <Button className='border-2'>
-                    <ArrowRightCircle
+
+                <WordSearch />
+                <Button className='border-2 mb-[100px]'>
+                    <ArrowUpCircle
                         stroke='red'
                         fill='#fff'
                         width={32}
@@ -57,7 +59,6 @@ const WordSearchScreen: React.FC = () => {
                         }}
                     />
                 </Button>
-                <WordSearch />
             </View>
             <Drawer
                 isOpen={showDrawer}
@@ -90,6 +91,13 @@ const WordSearchScreen: React.FC = () => {
                             }}
                             className='flex-1'
                         >
+                            <ArrowDownCircle
+                                stroke='red'
+                                fill='#fff'
+                                width={32}
+                                height={32}
+                            />
+
                             <Text>Button</Text>
                         </Button>
                     </DrawerFooter>
