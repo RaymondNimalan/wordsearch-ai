@@ -9,16 +9,33 @@ const TabLayout: React.FC = () => {
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Adjust for iOS and Android
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0} // Adjust this value as necessary
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
         >
             <Tabs
                 screenOptions={{
                     headerShown: false,
-                    tabBarStyle: { position: 'absolute' },
+                    tabBarStyle: {
+                        height: 120,
+                        elevation: 0,
+                        borderTopWidth: 0,
+                        backgroundColor: 'transparent',
+                    },
                     tabBarHideOnKeyboard: true,
                 }}
             >
+                <Tabs.Screen
+                    name='leaderboard'
+                    options={{
+                        title: 'Leaderboard',
+                        tabBarIcon: ({ color, focused }) => (
+                            <TabBarIcon
+                                name={focused ? 'home' : 'home-outline'}
+                                color={'#20b42acf6'}
+                            />
+                        ),
+                    }}
+                />
                 <Tabs.Screen
                     name='index'
                     options={{
@@ -27,6 +44,7 @@ const TabLayout: React.FC = () => {
                             <TabBarIcon
                                 name={focused ? 'home' : 'home-outline'}
                                 color={'#20b42acf6'}
+                                size={48}
                             />
                         ),
                     }}

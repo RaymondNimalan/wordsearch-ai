@@ -8,8 +8,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Home: React.FC = () => {
     const router = useRouter();
     return (
-        <SafeAreaView>
-            <View className='justify-ceneter items-center'>
+        <SafeAreaView
+            style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <View className='flex-1 justify-center items-center'>
                 <Text>Welcome to Word Sleuth</Text>
                 <Button
                     className='bg-blue-300 h-[30px] '

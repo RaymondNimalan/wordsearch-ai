@@ -38,15 +38,22 @@ export default function RootLayout() {
                                 headerTitleStyle: {
                                     fontWeight: 'bold',
                                 },
+                                contentStyle: {},
                             }}
                         >
                             <Stack.Screen
                                 name='index'
                                 // options={{ headerShown: false }}
+                                options={{
+                                    contentStyle: {},
+                                }}
                             />
                             <Stack.Screen
                                 name='(tabs)'
-                                options={{ headerShown: false }}
+                                options={{
+                                    headerShown: false,
+                                    contentStyle: {},
+                                }}
                             />
                         </Stack>
                     </GameProvider>
