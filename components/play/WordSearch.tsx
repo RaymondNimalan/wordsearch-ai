@@ -16,6 +16,9 @@ const WordSearch: React.FC = () => {
     const [selectedLetters, setSelectedLetters] = useState<boolean[][]>(
         Array.from({ length: gridSize }, () => Array(gridSize).fill(false))
     );
+    const [foundLetters, setFoundLetters] = useState<boolean[][]>(
+        Array.from({ length: gridSize }, () => Array(gridSize).fill(false))
+    );
 
     const {
         wordBank,
@@ -30,6 +33,9 @@ const WordSearch: React.FC = () => {
         row: number;
         col: number;
     } | null>(null);
+    const [currentPath, setCurrentPath] = useState<
+        { row: number; col: number }[]
+    >([]);
 
     const handlePanGestureEvent = (event) => {
         if (!startPosition) return;
@@ -42,7 +48,19 @@ const WordSearch: React.FC = () => {
             isWithinBounds(targetRow, targetCol) &&
             isStraightLine(startPosition, { row: targetRow, col: targetCol })
         ) {
-            highlightLetters(startPosition, { row: targetRow, col: targetCol });
+            const alreadySelected = currentPath.some(
+                (cell) => cell.row === targetRow && cell.col === targetCol
+            );
+            if (!alreadySelected) {
+                highlightLetters(startPosition, {
+                    row: targetRow,
+                    col: targetCol,
+                });
+                setCurrentPath((prevPath) => [
+                    ...prevPath,
+                    { row: targetRow, col: targetCol },
+                ]);
+            }
         }
     };
 
@@ -55,13 +73,10 @@ const WordSearch: React.FC = () => {
             if (isWithinBounds(row, col)) {
                 setStartPosition({ row, col });
                 markLetter(row, col);
+                setCurrentPath([{ row, col }]);
             }
         } else if (state === State.END && startPosition) {
-            const row = Math.floor(y / 30);
-            const col = Math.floor(x / 30);
-            if (isWithinBounds(row, col)) {
-                checkSelectedWord(startPosition, { row, col });
-            }
+            checkSelectedWord(currentPath);
             resetSelection();
         }
     };
@@ -72,9 +87,9 @@ const WordSearch: React.FC = () => {
 
     const isStraightLine = (start, end) => {
         return (
-            start.row === end.row ||
-            start.col === end.col ||
-            Math.abs(start.row - end.row) === Math.abs(start.col - end.col)
+            start.row === end.row || // horizontal
+            start.col === end.col || // vertical
+            Math.abs(start.row - end.row) === Math.abs(start.col - end.col) // diagonal
         );
     };
 
@@ -113,43 +128,30 @@ const WordSearch: React.FC = () => {
         setSelectedLetters(newSelectedLetters);
     };
 
-    const checkSelectedWord = (start, end) => {
-        const selectedWord = extractWord(start, end);
-        console.log(selcted);
+    const checkSelectedWord = (path) => {
+        const selectedWord = path
+            .map(({ row, col }) => letters[row][col])
+            .join('');
+
+        console.log(selectedWord);
+        const reversedWord = selectedWord.split('').reverse().join('');
+
         if (notFoundWords.includes(selectedWord)) {
             Alert.alert('Selected Word', selectedWord);
             setFoundWords([...foundWords, selectedWord]);
             setNotFoundWords(
                 notFoundWords.filter((word) => word !== selectedWord)
             );
+            highlightFoundWord(path);
         }
     };
 
-    const extractWord = (start, end) => {
-        const selectedWord = [];
-        if (start.row === end.row) {
-            const minCol = Math.min(start.col, end.col);
-            const maxCol = Math.max(start.col, end.col);
-            for (let c = minCol; c <= maxCol; c++) {
-                selectedWord.push(letters[start.row][c]);
-            }
-        } else if (start.col === end.col) {
-            const minRow = Math.min(start.row, end.row);
-            const maxRow = Math.max(start.row, end.row);
-            for (let r = minRow; r <= maxRow; r++) {
-                selectedWord.push(letters[r][start.col]);
-            }
-        } else {
-            const rowStep = start.row < end.row ? 1 : -1;
-            const colStep = start.col < end.col ? 1 : -1;
-            const steps = Math.abs(start.row - end.row);
-            for (let i = 0; i <= steps; i++) {
-                selectedWord.push(
-                    letters[start.row + i * rowStep][start.col + i * colStep]
-                );
-            }
-        }
-        return selectedWord.join('');
+    const highlightFoundWord = (path) => {
+        const newFoundLetters = [...foundLetters];
+        path.forEach(({ row, col }) => {
+            newFoundLetters[row][col] = true;
+        });
+        setFoundLetters(newFoundLetters);
     };
 
     const resetSelection = () => {
@@ -157,6 +159,7 @@ const WordSearch: React.FC = () => {
             Array.from({ length: gridSize }, () => Array(gridSize).fill(false))
         );
         setStartPosition(null);
+        setCurrentPath([]);
     };
 
     return (
@@ -173,8 +176,13 @@ const WordSearch: React.FC = () => {
                                     key={colIndex}
                                     style={[
                                         styles.cell,
-                                        selectedLetters[rowIndex][colIndex] &&
-                                            styles.selected,
+                                        foundLetters[rowIndex][colIndex]
+                                            ? styles.found
+                                            : selectedLetters[rowIndex][
+                                                  colIndex
+                                              ]
+                                            ? styles.selected
+                                            : null,
                                     ]}
                                 >
                                     <Text style={styles.letter}>{letter}</Text>
@@ -193,30 +201,52 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: '#f0f4f8',
     },
     grid: {
-        width: 300,
-        height: 300,
-        borderWidth: 1,
-        borderColor: '#000',
-        borderRadius: 8,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        width: '85%',
+        aspectRatio: 1,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignSelf: 'center',
+        transform: [{ translateX: -12 }],
     },
     row: {
         flexDirection: 'row',
     },
     cell: {
-        width: 30,
-        height: 30,
+        width: '9.5%',
+        aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 8,
+        margin: 2,
+        borderRadius: 4,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 5,
+        transform: [{ translateY: -2 }],
     },
     selected: {
-        backgroundColor: 'yellow',
+        backgroundColor: '#ffeb3b',
+        borderColor: '#fbc02d',
+        borderWidth: 1,
+    },
+    found: {
+        backgroundColor: '#ff5722',
+        borderColor: '#e64a19',
+        borderWidth: 1,
     },
     letter: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: '#212121',
+        textAlign: 'center',
+        textAlignVertical: 'center',
     },
 });
 
