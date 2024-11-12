@@ -8,7 +8,7 @@ import {
 } from 'react-native-gesture-handler';
 import { wordSearchGame } from './wordSearchData';
 
-const gridSize = 10;
+const gridSize = 8;
 const letters = wordSearchGame.matrix;
 const words = wordSearchGame.words;
 
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f4f8',
+        backgroundColor: '#FEF08A',
     },
     grid: {
         flexDirection: 'row',
@@ -217,12 +217,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     cell: {
-        width: '9.5%',
+        width: '11%',
         aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 2,
-        borderRadius: 4,
+        margin: 3,
+        borderRadius: 12,
+        borderWidth: 1.5,
         backgroundColor: '#fff',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },

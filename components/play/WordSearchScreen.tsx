@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/drawer';
 import { GameContext } from '@/context/GameProvider';
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { ArrowDownCircle, ArrowUpCircle } from 'react-native-feather';
 import WordSearch from './WordSearch';
 import { wordSearchGame } from './wordSearchData';
@@ -42,13 +42,15 @@ const WordSearchScreen: React.FC = () => {
 
     return (
         <>
-            <View className='flex-1 items-center '>
-                <Text style={{ fontSize: 24, marginTop: 20 }}>
-                    Word Search Game
-                </Text>
+            <View className='flex-1 items-center bg-yellow-200'>
+                <Image
+                    source={require('../../assets/images/findwords-logo.png')}
+                    style={{ width: 400, height: 160 }}
+                    className='my-4'
+                />
 
                 <WordSearch />
-                <Button className='border-2 mb-[100px]'>
+                <Button className='border-2 my-4'>
                     <ArrowUpCircle
                         stroke='red'
                         fill='#fff'

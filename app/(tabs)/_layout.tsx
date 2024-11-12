@@ -1,7 +1,11 @@
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet } from 'react-native';
+import {
+    Image,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+} from 'react-native';
 
 type Props = {};
 
@@ -29,9 +33,21 @@ const TabLayout: React.FC = () => {
                     options={{
                         title: 'Leaderboard',
                         tabBarIcon: ({ color, focused }) => (
-                            <TabBarIcon
-                                name={focused ? 'home' : 'home-outline'}
-                                color={'#20b42acf6'}
+                            // <TabBarIcon
+                            //     name={focused ? 'home' : 'home-outline'}
+                            //     color={'#20b42acf6'}
+                            // />
+                            <Image
+                                source={
+                                    focused
+                                        ? require('../../assets/images/leaderboard-icon-focused.png') // Focused state image
+                                        : require('../../assets/images/leaderboard-icon.png') // Default image
+                                }
+                                style={{
+                                    width: 75,
+                                    height: 75,
+                                    // tintColor: color, // Optional, matches the color prop
+                                }}
                             />
                         ),
                     }}
@@ -39,12 +55,24 @@ const TabLayout: React.FC = () => {
                 <Tabs.Screen
                     name='index'
                     options={{
-                        title: 'Play',
+                        headerShown: false,
                         tabBarIcon: ({ color, focused }) => (
-                            <TabBarIcon
-                                name={focused ? 'home' : 'home-outline'}
-                                color={'#20b42acf6'}
-                                size={48}
+                            // <TabBarIcon
+                            //     name={focused ? 'home' : 'home-outline'}
+                            //     color={'#20b42acf6'}
+                            //     size={48}
+                            // />
+                            <Image
+                                source={
+                                    focused
+                                        ? require('../../assets/images/play-icon-focused.png') // Focused state image
+                                        : require('../../assets/images/play-icon.png') // Default image
+                                }
+                                style={{
+                                    width: 125,
+                                    height: 125,
+                                    // tintColor: color, // Optional, matches the color prop
+                                }}
                             />
                         ),
                     }}
@@ -54,13 +82,25 @@ const TabLayout: React.FC = () => {
                     options={{
                         title: 'Explore',
                         tabBarIcon: ({ color, focused }) => (
-                            <TabBarIcon
-                                name={
+                            // <TabBarIcon
+                            //     name={
+                            //         focused
+                            //             ? 'code-slash'
+                            //             : 'code-slash-outline'
+                            //     }
+                            //     color={color}
+                            // />
+                            <Image
+                                source={
                                     focused
-                                        ? 'code-slash'
-                                        : 'code-slash-outline'
+                                        ? require('../../assets/images/setting-icon-focused.png') // Focused state image
+                                        : require('../../assets/images/setting-icon.png') // Default image
                                 }
-                                color={color}
+                                style={{
+                                    width: 75,
+                                    height: 75,
+                                    // tintColor: color, // Optional, matches the color prop
+                                }}
                             />
                         ),
                     }}
